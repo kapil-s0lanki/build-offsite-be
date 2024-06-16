@@ -4,17 +4,17 @@ import { Repository } from 'typeorm';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { CreateAdminDto } from './dto/create-admin.dto';
-import { Admin } from './entities/admin.entity';
 import { authentication, generateSalt, hashRefreshToken } from '../common/utils';
 import { UpdateAdminDto } from './dto/update-admin.dto';
 import { JwtPayload } from './types/jwt_payload';
 import { Tokens } from './types/tokens';
 import { LoginDto } from './dto/login.dto';
+import { AdminSchema } from './schema/admin.schema';
 
 @Injectable()
 export class AdminService {
   constructor(
-    @InjectRepository(Admin) private adminRepository: Repository<Admin>,
+    @InjectRepository(AdminSchema) private adminRepository: Repository<AdminSchema>,
     private jwtService: JwtService,
     private readonly config: ConfigService,
   ) {}
@@ -132,11 +132,11 @@ export class AdminService {
 
     const [at, rt] = await Promise.all([
       this.jwtService.signAsync(jwtPayload, {
-        secret: this.config.get<string>('access_token_secret'),
+        secret: this.config.get<string>('app.jwt.admin_access_token_secret'),
         expiresIn: '15m',
       }),
       this.jwtService.signAsync(jwtPayload, {
-        secret: this.config.get<string>('refreshToken_secret'),
+        secret: this.config.get<string>('app.jwt.admin_refresh_token_secret'),
         expiresIn: '7d',
       }),
     ]);

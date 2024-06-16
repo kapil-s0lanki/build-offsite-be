@@ -18,5 +18,7 @@ export default registerAs('app', () => ({
     secret: process.env.JWT_SECRET,
     expiration: process.env.JWT_EXPIRES_IN || '1d',
     refreshToken_expiration: process.env.JWT_REFRESH_EXPIRES_IN || '1y',
+    admin_access_token_secret: process.env.admin_access_token_secret,
+    admin_refresh_token_secret:process.env.admin_refresh_token_secret
   },
 }));
