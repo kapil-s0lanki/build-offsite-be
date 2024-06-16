@@ -1,8 +1,37 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { ConfigService } from '@nestjs/config';
+import appConfig from './config/app.config';
+import { ValidationPipe } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
 async function bootstrap() {
+  const configService = new ConfigService({ app: appConfig() });
   const app = await NestFactory.create(AppModule);
-  await app.listen(3000);
+
+
+  const port = configService.get<number>('app.port');
+  // const host = configService.get<string>('app.devicehost');
+
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    }),
+  );
+
+  app.enableCors();
+  app.enableShutdownHooks();
+  const config = new DocumentBuilder()
+    .setTitle('EventCRM Backend')
+    .setDescription('The EventCRM API description')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .addTag('eventCrm')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api', app, document);
+
+  await app.listen(port);
 }
 bootstrap();
