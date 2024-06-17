@@ -28,15 +28,17 @@ import { RefreshTokenGuard } from './guard/refresh_token_guard.guard';
 export class AdminController {
   constructor(private readonly adminService: AdminService) {}
 
+  @UseGuards(AccessTokenGuard)
   @Post()
   @UsePipes(new ValidationPipe())
   @ApiBody({ type: CreateAdminDto })
+  @ApiBearerAuth()
   @ApiCreatedResponse({
     type: Admin,
     description: 'Admin Created Successfully',
   })
-  create(@Body() createAdminDto: CreateAdminDto) {
-    return this.adminService.create(createAdminDto);
+  create(@GetCurrentAdminId() id: string, @Body() createAdminDto: CreateAdminDto) {
+    return this.adminService.create(id, createAdminDto);
   }
 
   @Post('login')

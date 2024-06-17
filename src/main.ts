@@ -1,14 +1,13 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
-import appConfig from './config/app.config';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import appConfig from './config/app.config';
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const configService = new ConfigService({ app: appConfig() });
   const app = await NestFactory.create(AppModule);
-
 
   const port = configService.get<number>('app.port');
   // const host = configService.get<string>('app.devicehost');
