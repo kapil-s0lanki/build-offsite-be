@@ -3,20 +3,19 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import datasource from 'src/database/datasource';
+import { comparePassword, hashedPassword } from 'src/common/utils';
 import { JwtPayloadTenet } from './types/jwt_payload_tenet';
 import { LoginTenetDto } from './dto/login-tenet-dto';
-import { Tenet } from './entities/tenet.entity';
 import { UpdateTenetDto } from './dto/update-tenet.dto';
 import { CreateTenetDto } from './dto/create-tenet.dto';
-import datasource from 'src/database/datasource';
 import { TenetSchema } from './schema/tenetSchema';
-import { comparePassword, hashedPassword } from 'src/common/utils';
 
 @Injectable()
 export class TenetsService {
   constructor(
     // private readonly dataSource: DataSource,
-    @InjectRepository(Tenet) private tenetRepository: Repository<Tenet>,
+    @InjectRepository(TenetSchema) private tenetRepository: Repository<any>,
     private jwtService: JwtService,
     private readonly config: ConfigService,
   ) {}
@@ -41,18 +40,8 @@ export class TenetsService {
 
     return await this.tenetRepository.save(newTenets);
   }
+
   async findAll() {
-    // const queryRunner = this.dataSource.createQueryRunner();
-
-    // await queryRunner.connect();
-    // await queryRunner.startTransaction();
-    // try {
-    //   await queryRunner;
-    //   //to do from here
-    // } catch (error) {
-    //   console.log(error);
-    // }
-
     const tenets = await this.tenetRepository.find({ where: { is_deleted: false } });
 
     return tenets.map((tenet) => {
@@ -62,6 +51,7 @@ export class TenetsService {
       return info;
     });
   }
+
   findOne(id: string) {
     // return this.tenetRepository.findOne({ where: { id } });
     const tenetRepo = datasource.getRepository(TenetSchema);
@@ -95,7 +85,7 @@ export class TenetsService {
       tenetId: tenet.id,
     };
     const token = await this.jwtService.signAsync(jwtPayloadtenet, {
-      secret: this.config.get<string>('app.jwt.access_token_tenet'),
+      secret: this.config.get<string>('app.jwt.secret'),
       expiresIn: '1d',
     });
 

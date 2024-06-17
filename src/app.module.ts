@@ -5,9 +5,10 @@ import { AppService } from './app.service';
 import { AdminModule } from './admin/admin.module';
 import appConfig from './config/app.config';
 import { DatabaseModule } from './database/database.module';
+import { TenetsModule } from './tenets/tenets.module';
 
 @Module({
-  imports: [ConfigModule.forRoot({ isGlobal: true, load: [appConfig] }), DatabaseModule, AdminModule],
+  imports: [ConfigModule.forRoot({ isGlobal: true, load: [appConfig] }), DatabaseModule, AdminModule, TenetsModule],
   controllers: [AppController],
   providers: [AppService],
 })

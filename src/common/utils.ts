@@ -14,3 +14,18 @@ export async function authentication(salt: string, password: string): Promise<st
 export async function hashRefreshToken(password: string, saltRounds = 10): Promise<string> {
   return bcrypt.hash(password, saltRounds);
 }
+
+export async function hashedPassword(password: string, saltRounds = 10): Promise<string> {
+  return bcrypt.hash(password, saltRounds);
+}
+
+export async function comparePassword(password: string, hashedPasswordString: string): Promise<boolean> {
+  try {
+    // Compare the password with the hashed password
+    const isMatch = await bcrypt.compare(password, hashedPasswordString);
+    return isMatch;
+  } catch (error) {
+    // Handle potential errors
+    throw new Error(`Error comparing password: ${error.message}`);
+  }
+}

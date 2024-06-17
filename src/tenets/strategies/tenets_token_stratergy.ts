@@ -9,7 +9,7 @@ export class ClientTokenStratergy extends PassportStrategy(Strategy, 'jwt-tenet'
   constructor(config: ConfigService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      secretOrKey: config.get<string>('app.jwt.access_token_tenet'),
+      secretOrKey: config.get<string>('app.jwt.secret'),
     });
   }
 
