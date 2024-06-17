@@ -14,12 +14,19 @@ import { AdminSchema } from './schema/admin.schema';
 @Injectable()
 export class AdminService {
   constructor(
-    @InjectRepository(AdminSchema) private adminRepository: Repository<AdminSchema>,
+    @InjectRepository(AdminSchema) private adminRepository: Repository<any>,
     private jwtService: JwtService,
     private readonly config: ConfigService,
   ) {}
 
-  async create(createAdminDto: CreateAdminDto) {
+  async create(id: string, createAdminDto: CreateAdminDto) {
+    // check if the admin is Super Admin or Not
+    const superAdmin = this.config.get<string>('super_admin_id');
+
+    if (superAdmin !== id) {
+      throw new HttpException('You are not a super Admin', 400);
+    }
+
     const existingEmail = await this.adminRepository.findOne({
       where: {
         email: createAdminDto.email,

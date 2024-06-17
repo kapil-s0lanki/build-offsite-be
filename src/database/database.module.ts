@@ -35,4 +35,4 @@ dotenv.config();
     }),
   ],
 })
-export class DatabaseModule { }
+export class DatabaseModule {}

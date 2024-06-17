@@ -7,6 +7,7 @@ export default registerAs('app', () => ({
   current_version: process.env.npm_package_version,
   query_timeout: process.env.QUERY_TIMEOUT || 5000,
   webURL: process.env.WEB_URL,
+  super_admin_id: process.env.super_admin_id,
   db: {
     host: process.env.SQL_HOST || 'localhost',
     port: +process.env.SQL_PORT || 5432,
@@ -19,6 +20,6 @@ export default registerAs('app', () => ({
     expiration: process.env.JWT_EXPIRES_IN || '1d',
     refreshToken_expiration: process.env.JWT_REFRESH_EXPIRES_IN || '1y',
     admin_access_token_secret: process.env.admin_access_token_secret,
-    admin_refresh_token_secret:process.env.admin_refresh_token_secret
+    admin_refresh_token_secret: process.env.admin_refresh_token_secret,
   },
 }));
